@@ -1,4 +1,5 @@
 # voxel-editor
+![now](./now.png)
 Web上でVoxelの編集が出来るサービスを作ろうと思っています。  
 ## 現状
 カメラの回転が出来る  
