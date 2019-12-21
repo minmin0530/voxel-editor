@@ -13,6 +13,7 @@
         var cubeGeo, cubeMaterial = [], materialIndex = 0;
 
         var objects = [];
+        var contents = "";
 
         var text = {
 
@@ -87,11 +88,6 @@
         gui.addColor(text, 'cubeColor3');
         gui.addColor(text, 'backgroundColor');
         gui.add(text, 'colorNum' );
-
- 
-
- 
-
 
         document.addEventListener( 'mousemove', onDocumentMouseMove, false );
         document.addEventListener( 'mousedown', onDocumentMouseDown, false );
@@ -177,6 +173,18 @@
 
                 objects.push( voxel );
 
+                contents += "{"
+                    + "x:" + ((voxel.position.x + 25) / 50) + ","
+                    + "y:" + ((voxel.position.y - 25) / 50) + ","
+                    + "z:" + ((voxel.position.z + 25) / 50) + ","
+                    + "r:" + voxel.material.color.r + ","
+                    + "g:" + voxel.material.color.g + ","
+                    + "b:" + voxel.material.color.b + ","
+                    + "a:" + voxel.material.opacity + "},";
+                    
+                document.getElementById("content").textContent = contents;
+                    
+
             }
 
             render();
@@ -213,8 +221,29 @@
             renderer.setClearColor(text.backgroundColor, 1.0);
             renderer.render( scene, camera );
         }
+        function download() {
+          console.log(contents);
+          const blob = new Blob([ contents ], { "type" : "application/x-msdownload" });
+        
+          window.URL = window.URL || window.webkitURL;
+          document.getElementById("download").setAttribute("href", window.URL.createObjectURL(blob));
+          // document.getElementById("download").setAttribute("download", "tmp.txt");
+        }
+
+        function downLoadJson() {
+          // var resultJson = JSON.stringify($scope.jsonObj);
+          var downLoadLink = document.createElement("a");
+          downLoadLink.download = "voxel.txt";
+          downLoadLink.href = URL.createObjectURL(new Blob([contents], {type: "text.plain"}));
+          downLoadLink.dataset.downloadurl = ["text/plain", downLoadLink.download, downLoadLink.href].join(":");
+          downLoadLink.click();
+      }
     </script>
   </head>
   <body>
+    <div style="position: absolute;">
+      <textarea id="content" cols="40" rows="5">voxelエディター</textarea>
+      <button type="button" onclick="downLoadJson();">ダウンロード</button>
+    </div>          
   </body>
 </html>
