@@ -21,10 +21,23 @@
             cubeColor1 : "#00ff00",
             cubeColor2 : "#0000ff",
             cubeColor3 : "#ffff00",
+            cubeColor4 : "#ff00ff",
+            cubeColor5 : "#00ffff",
+            cubeColor6 : "#ffffff",
+            cubeColor7 : "#777777",
+            cubeColor8 : "#000000",
+            cubeColor9 : "#f0ff0f",
+            cubeColor10 : "#f00f00",
+            cubeColor11 : "#0f00f0",
+            cubeColor12 : "#00f00f",
+            cubeColor13 : "#f0f0f0",
+            cubeColor14 : "#0f0f0f",
+            cubeColor15 : "#0ff0ff",
+
             backgroundColor : "#23aeff",
             colorNum : function() {
                 materialIndex += 1;
-                if (materialIndex >= 4) {
+                if (materialIndex >= 16) {
                     materialIndex = 0;
                 }
             }
@@ -50,6 +63,18 @@
         cubeMaterial.push( new THREE.MeshLambertMaterial( { color: text.cubeColor1 } ) );
         cubeMaterial.push( new THREE.MeshLambertMaterial( { color: text.cubeColor2 } ) );
         cubeMaterial.push( new THREE.MeshLambertMaterial( { color: text.cubeColor3 } ) );
+        cubeMaterial.push( new THREE.MeshLambertMaterial( { color: text.cubeColor4 } ) );
+        cubeMaterial.push( new THREE.MeshLambertMaterial( { color: text.cubeColor5 } ) );
+        cubeMaterial.push( new THREE.MeshLambertMaterial( { color: text.cubeColor6 } ) );
+        cubeMaterial.push( new THREE.MeshLambertMaterial( { color: text.cubeColor7 } ) );
+        cubeMaterial.push( new THREE.MeshLambertMaterial( { color: text.cubeColor8 } ) );
+        cubeMaterial.push( new THREE.MeshLambertMaterial( { color: text.cubeColor9 } ) );
+        cubeMaterial.push( new THREE.MeshLambertMaterial( { color: text.cubeColor10 } ) );
+        cubeMaterial.push( new THREE.MeshLambertMaterial( { color: text.cubeColor11 } ) );
+        cubeMaterial.push( new THREE.MeshLambertMaterial( { color: text.cubeColor12 } ) );
+        cubeMaterial.push( new THREE.MeshLambertMaterial( { color: text.cubeColor13 } ) );
+        cubeMaterial.push( new THREE.MeshLambertMaterial( { color: text.cubeColor14 } ) );
+        cubeMaterial.push( new THREE.MeshLambertMaterial( { color: text.cubeColor15 } ) );
 
 
         raycaster = new THREE.Raycaster();
@@ -82,10 +107,23 @@
 
         gui = new dat.GUI();
 
-        gui.addColor(text, 'cubeColor0');
-        gui.addColor(text, 'cubeColor1');
-        gui.addColor(text, 'cubeColor2');
-        gui.addColor(text, 'cubeColor3');
+        gui.addColor(text, 'cubeColor0').onChange(function(){  materialIndex = 0;  });
+        gui.addColor(text, 'cubeColor1').onChange(function(){  materialIndex = 1;  });
+        gui.addColor(text, 'cubeColor2').onChange(function(){  materialIndex = 2;  });
+        gui.addColor(text, 'cubeColor3').onChange(function(){  materialIndex = 3;  });
+        gui.addColor(text, 'cubeColor4').onChange(function(){  materialIndex = 4;  });
+        gui.addColor(text, 'cubeColor5').onChange(function(){  materialIndex = 5;  });
+        gui.addColor(text, 'cubeColor6').onChange(function(){  materialIndex = 6;  });
+        gui.addColor(text, 'cubeColor7').onChange(function(){  materialIndex = 7;  });
+        gui.addColor(text, 'cubeColor8').onChange(function(){  materialIndex = 8;  });
+        gui.addColor(text, 'cubeColor9').onChange(function(){  materialIndex = 9;  });
+        gui.addColor(text, 'cubeColor10').onChange(function(){  materialIndex = 10;  });
+        gui.addColor(text, 'cubeColor11').onChange(function(){  materialIndex = 11;  });
+        gui.addColor(text, 'cubeColor12').onChange(function(){  materialIndex = 12;  });
+        gui.addColor(text, 'cubeColor13').onChange(function(){  materialIndex = 13;  });
+        gui.addColor(text, 'cubeColor14').onChange(function(){  materialIndex = 14;  });
+        gui.addColor(text, 'cubeColor15').onChange(function(){  materialIndex = 15;  });
+
         gui.addColor(text, 'backgroundColor');
         gui.add(text, 'colorNum' );
 
@@ -218,6 +256,18 @@
             cubeMaterial[1].color.set(text.cubeColor1);
             cubeMaterial[2].color.set(text.cubeColor2);
             cubeMaterial[3].color.set(text.cubeColor3);
+            cubeMaterial[4].color.set(text.cubeColor4);
+            cubeMaterial[5].color.set(text.cubeColor5);
+            cubeMaterial[6].color.set(text.cubeColor6);
+            cubeMaterial[7].color.set(text.cubeColor7);
+            cubeMaterial[8].color.set(text.cubeColor8);
+            cubeMaterial[9].color.set(text.cubeColor9);
+            cubeMaterial[10].color.set(text.cubeColor10);
+            cubeMaterial[11].color.set(text.cubeColor11);
+            cubeMaterial[12].color.set(text.cubeColor12);
+            cubeMaterial[13].color.set(text.cubeColor13);
+            cubeMaterial[14].color.set(text.cubeColor14);
+            cubeMaterial[15].color.set(text.cubeColor15);
             renderer.setClearColor(text.backgroundColor, 1.0);
             renderer.render( scene, camera );
         }
