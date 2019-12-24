@@ -3,7 +3,6 @@
     <meta charset="utf-8" />
     <script src="three.min.js"></script>
     <script src="OrbitControls.js"></script>
-    <script src="dat.gui.min.js"></script>
     <script>
         var camera, scene, renderer;
         var plane;
@@ -17,61 +16,98 @@
         var contents = "";
         var form;
         var loadFlag = false;
-        var text = {
+        // var text = {
 
-            cubeColor0 : "#ff0000",
-            cubeColor1 : "#00ff00",
-            cubeColor2 : "#0000ff",
-            cubeColor3 : "#ffff00",
-            cubeColor4 : "#ff00ff",
-            cubeColor5 : "#00ffff",
-            cubeColor6 : "#ffffff",
-            cubeColor7 : "#777777",
-            cubeColor8 : "#000000",
-            cubeColor9 : "#f0ff0f",
-            cubeColor10 : "#f00f00",
-            cubeColor11 : "#0f00f0",
-            cubeColor12 : "#00f00f",
-            cubeColor13 : "#f0f0f0",
-            cubeColor14 : "#0f0f0f",
-            cubeColor15 : "#0ff0ff",
+        //     cubeColor0 : "#ff0000",
+        //     cubeColor1 : "#00ff00",
+        //     cubeColor2 : "#0000ff",
+        //     cubeColor3 : "#ffff00",
+        //     cubeColor4 : "#ff00ff",
+        //     cubeColor5 : "#00ffff",
+        //     cubeColor6 : "#ffffff",
+        //     cubeColor7 : "#777777",
+        //     cubeColor8 : "#000000",
+        //     cubeColor9 : "#f0ff0f",
+        //     cubeColor10 : "#f00f00",
+        //     cubeColor11 : "#0f00f0",
+        //     cubeColor12 : "#00f00f",
+        //     cubeColor13 : "#f0f0f0",
+        //     cubeColor14 : "#0f0f0f",
+        //     cubeColor15 : "#0ff0ff",
 
-            backgroundColor : "#23aeff",
-            colorNum : function() {
-                materialIndex += 1;
-                if (materialIndex >= 16) {
-                    materialIndex = 0;
-                }
-            }
-        };
+        //     backgroundColor : "#23aeff",
+        //     colorNum : function() {
+        //         materialIndex += 1;
+        //         if (materialIndex >= 16) {
+        //             materialIndex = 0;
+        //         }
+        //     }
+        // };
 
-        var colorArray = [
-          new THREE.Color( text.cubeColor0 ),
-          new THREE.Color( text.cubeColor1 ),
-          new THREE.Color( text.cubeColor2 ),
-          new THREE.Color( text.cubeColor3 ),
-          new THREE.Color( text.cubeColor4 ),
-          new THREE.Color( text.cubeColor5 ),
-          new THREE.Color( text.cubeColor6 ),
-          new THREE.Color( text.cubeColor7 ),
-          new THREE.Color( text.cubeColor8 ),
-          new THREE.Color( text.cubeColor9 ),
-          new THREE.Color( text.cubeColor10 ),
-          new THREE.Color( text.cubeColor11 ),
-          new THREE.Color( text.cubeColor12 ),
-          new THREE.Color( text.cubeColor13 ),
-          new THREE.Color( text.cubeColor14 ),
-          new THREE.Color( text.cubeColor15 ),
+      //   var colorArray = [
+      //     new THREE.Color( text.cubeColor0 ),
+      //     new THREE.Color( text.cubeColor1 ),
+      //     new THREE.Color( text.cubeColor2 ),
+      //     new THREE.Color( text.cubeColor3 ),
+      //     new THREE.Color( text.cubeColor4 ),
+      //     new THREE.Color( text.cubeColor5 ),
+      //     new THREE.Color( text.cubeColor6 ),
+      //     new THREE.Color( text.cubeColor7 ),
+      //     new THREE.Color( text.cubeColor8 ),
+      //     new THREE.Color( text.cubeColor9 ),
+      //     new THREE.Color( text.cubeColor10 ),
+      //     new THREE.Color( text.cubeColor11 ),
+      //     new THREE.Color( text.cubeColor12 ),
+      //     new THREE.Color( text.cubeColor13 ),
+      //     new THREE.Color( text.cubeColor14 ),
+      //     new THREE.Color( text.cubeColor15 ),
+      // ];
+
+      var colorNumTextArray = [
+        "color1",
+        "color2",
+        "color3",
+        "color4",
+        "color5",
+        "color6",
+        "color7",
+        "color8",
+        "color9",
+        "color10",
+        "color11",
+        "color12",
+        "color13",
+        "color14",
+        "color15",
+        "color16",
       ];
 
       // ページの読み込みを待つ
       window.addEventListener('load', init);
       function init() {
+
+        for (let l = 0; l < 16; ++l) {
+          document.getElementById(colorNumTextArray[l]).addEventListener('click', function(){
+            materialIndex = l;
+            cubeMaterial[l].color.set(document.getElementById(colorNumTextArray[l]).value);
+          }, false);
+          document.getElementById(colorNumTextArray[l]).addEventListener('change', function(){
+            materialIndex = l;
+            cubeMaterial[l].color.set(document.getElementById(colorNumTextArray[l]).value);
+          }, false);
+        }
+        document.getElementById("background").addEventListener('click', function(){
+          renderer.setClearColor(document.getElementById("background").value, 1.0);          
+        });
+        document.getElementById("background").addEventListener('change', function(){
+          renderer.setClearColor(document.getElementById("background").value, 1.0);
+        });
+
         // シーンを作成
         scene = new THREE.Scene();
         // カメラを作成
         camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 10000 );
-        camera.position.set(0, 0, +1000);
+        camera.position.set(700, 700, 700);
 
         var rollOverGeo = new THREE.BoxBufferGeometry( 50, 50, 50 );
         rollOverMaterial = new THREE.MeshBasicMaterial( { color: 0xff0000, opacity: 0.5, transparent: true } );
@@ -80,31 +116,34 @@
 
 
         cubeGeo = new THREE.BoxBufferGeometry( 50, 50, 50 );
-        cubeMaterial.push( new THREE.MeshLambertMaterial( { color: text.cubeColor0 } ) );
-        cubeMaterial.push( new THREE.MeshLambertMaterial( { color: text.cubeColor1 } ) );
-        cubeMaterial.push( new THREE.MeshLambertMaterial( { color: text.cubeColor2 } ) );
-        cubeMaterial.push( new THREE.MeshLambertMaterial( { color: text.cubeColor3 } ) );
-        cubeMaterial.push( new THREE.MeshLambertMaterial( { color: text.cubeColor4 } ) );
-        cubeMaterial.push( new THREE.MeshLambertMaterial( { color: text.cubeColor5 } ) );
-        cubeMaterial.push( new THREE.MeshLambertMaterial( { color: text.cubeColor6 } ) );
-        cubeMaterial.push( new THREE.MeshLambertMaterial( { color: text.cubeColor7 } ) );
-        cubeMaterial.push( new THREE.MeshLambertMaterial( { color: text.cubeColor8 } ) );
-        cubeMaterial.push( new THREE.MeshLambertMaterial( { color: text.cubeColor9 } ) );
-        cubeMaterial.push( new THREE.MeshLambertMaterial( { color: text.cubeColor10 } ) );
-        cubeMaterial.push( new THREE.MeshLambertMaterial( { color: text.cubeColor11 } ) );
-        cubeMaterial.push( new THREE.MeshLambertMaterial( { color: text.cubeColor12 } ) );
-        cubeMaterial.push( new THREE.MeshLambertMaterial( { color: text.cubeColor13 } ) );
-        cubeMaterial.push( new THREE.MeshLambertMaterial( { color: text.cubeColor14 } ) );
-        cubeMaterial.push( new THREE.MeshLambertMaterial( { color: text.cubeColor15 } ) );
+        for (let l = 0; l < 16; ++l) {
+          cubeMaterial.push( new THREE.MeshLambertMaterial( { color: document.getElementById(colorNumTextArray[l]).value } ) );
+        }
+        // cubeMaterial.push( new THREE.MeshLambertMaterial( { color: text.cubeColor0 } ) );
+        // cubeMaterial.push( new THREE.MeshLambertMaterial( { color: text.cubeColor1 } ) );
+        // cubeMaterial.push( new THREE.MeshLambertMaterial( { color: text.cubeColor2 } ) );
+        // cubeMaterial.push( new THREE.MeshLambertMaterial( { color: text.cubeColor3 } ) );
+        // cubeMaterial.push( new THREE.MeshLambertMaterial( { color: text.cubeColor4 } ) );
+        // cubeMaterial.push( new THREE.MeshLambertMaterial( { color: text.cubeColor5 } ) );
+        // cubeMaterial.push( new THREE.MeshLambertMaterial( { color: text.cubeColor6 } ) );
+        // cubeMaterial.push( new THREE.MeshLambertMaterial( { color: text.cubeColor7 } ) );
+        // cubeMaterial.push( new THREE.MeshLambertMaterial( { color: text.cubeColor8 } ) );
+        // cubeMaterial.push( new THREE.MeshLambertMaterial( { color: text.cubeColor9 } ) );
+        // cubeMaterial.push( new THREE.MeshLambertMaterial( { color: text.cubeColor10 } ) );
+        // cubeMaterial.push( new THREE.MeshLambertMaterial( { color: text.cubeColor11 } ) );
+        // cubeMaterial.push( new THREE.MeshLambertMaterial( { color: text.cubeColor12 } ) );
+        // cubeMaterial.push( new THREE.MeshLambertMaterial( { color: text.cubeColor13 } ) );
+        // cubeMaterial.push( new THREE.MeshLambertMaterial( { color: text.cubeColor14 } ) );
+        // cubeMaterial.push( new THREE.MeshLambertMaterial( { color: text.cubeColor15 } ) );
 
 
         raycaster = new THREE.Raycaster();
         mouse = new THREE.Vector2();
                 
-        var gridHelper = new THREE.GridHelper( 1000, 20 );
+        var gridHelper = new THREE.GridHelper( 5000, 100 );
         scene.add( gridHelper );
 
-        var geometry = new THREE.PlaneBufferGeometry( 1000, 1000 );
+        var geometry = new THREE.PlaneBufferGeometry( 5000, 5000 );
         geometry.rotateX( - Math.PI / 2 );
 
         plane = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial( { visible: false } ) );
@@ -126,30 +165,30 @@
 
         var controls = new THREE.OrbitControls( camera, renderer.domElement );
 
-        gui = new dat.GUI();
+        // gui = new dat.GUI();
 
-        gui.addColor(text, 'backgroundColor');
-        gui.add(text, 'colorNum' );
-        var cc0  = gui.addColor(text, 'cubeColor0').onChange(function(){  materialIndex = 0; cubeMaterial[materialIndex].color.set(text.cubeColor0); });
-        var cc1  = gui.addColor(text, 'cubeColor1').onChange(function(){  materialIndex = 1; cubeMaterial[materialIndex].color.set(text.cubeColor1);  });
-        var cc2  = gui.addColor(text, 'cubeColor2').onChange(function(){  materialIndex = 2; cubeMaterial[materialIndex].color.set(text.cubeColor2);  });
-        var cc3  = gui.addColor(text, 'cubeColor3').onChange(function(){  materialIndex = 3; cubeMaterial[materialIndex].color.set(text.cubeColor3);  });
-        var cc4  = gui.addColor(text, 'cubeColor4').onChange(function(){  materialIndex = 4; cubeMaterial[materialIndex].color.set(text.cubeColor4);  });
-        var cc5  = gui.addColor(text, 'cubeColor5').onChange(function(){  materialIndex = 5; cubeMaterial[materialIndex].color.set(text.cubeColor5);  });
-        var cc6  = gui.addColor(text, 'cubeColor6').onChange(function(){  materialIndex = 6; cubeMaterial[materialIndex].color.set(text.cubeColor6);  });
-        var cc7  = gui.addColor(text, 'cubeColor7').onChange(function(){  materialIndex = 7; cubeMaterial[materialIndex].color.set(text.cubeColor7);  });
-        var cc8  = gui.addColor(text, 'cubeColor8').onChange(function(){  materialIndex = 8; cubeMaterial[materialIndex].color.set(text.cubeColor8);  });
-        var cc9  = gui.addColor(text, 'cubeColor9').onChange(function(){  materialIndex = 9; cubeMaterial[materialIndex].color.set(text.cubeColor9);  });
-        var cc10 = gui.addColor(text, 'cubeColor10').onChange(function(){  materialIndex = 10; cubeMaterial[materialIndex].color.set(text.cubeColor10);  });
-        var cc11 = gui.addColor(text, 'cubeColor11').onChange(function(){  materialIndex = 11; cubeMaterial[materialIndex].color.set(text.cubeColor11);  });
-        var cc12 = gui.addColor(text, 'cubeColor12').onChange(function(){  materialIndex = 12; cubeMaterial[materialIndex].color.set(text.cubeColor12);  });
-        var cc13 = gui.addColor(text, 'cubeColor13').onChange(function(){  materialIndex = 13; cubeMaterial[materialIndex].color.set(text.cubeColor13);  });
-        var cc14 = gui.addColor(text, 'cubeColor14').onChange(function(){  materialIndex = 14; cubeMaterial[materialIndex].color.set(text.cubeColor14);  });
-        var cc15 = gui.addColor(text, 'cubeColor15').onChange(function(){  materialIndex = 15; cubeMaterial[materialIndex].color.set(text.cubeColor15);  });
+        // gui.addColor(text, 'backgroundColor');
+        // gui.add(text, 'colorNum' );
+        // var cc0  = gui.addColor(text, 'cubeColor0').onChange(function(){  materialIndex = 0; cubeMaterial[materialIndex].color.set(text.cubeColor0); });
+        // var cc1  = gui.addColor(text, 'cubeColor1').onChange(function(){  materialIndex = 1; cubeMaterial[materialIndex].color.set(text.cubeColor1);  });
+        // var cc2  = gui.addColor(text, 'cubeColor2').onChange(function(){  materialIndex = 2; cubeMaterial[materialIndex].color.set(text.cubeColor2);  });
+        // var cc3  = gui.addColor(text, 'cubeColor3').onChange(function(){  materialIndex = 3; cubeMaterial[materialIndex].color.set(text.cubeColor3);  });
+        // var cc4  = gui.addColor(text, 'cubeColor4').onChange(function(){  materialIndex = 4; cubeMaterial[materialIndex].color.set(text.cubeColor4);  });
+        // var cc5  = gui.addColor(text, 'cubeColor5').onChange(function(){  materialIndex = 5; cubeMaterial[materialIndex].color.set(text.cubeColor5);  });
+        // var cc6  = gui.addColor(text, 'cubeColor6').onChange(function(){  materialIndex = 6; cubeMaterial[materialIndex].color.set(text.cubeColor6);  });
+        // var cc7  = gui.addColor(text, 'cubeColor7').onChange(function(){  materialIndex = 7; cubeMaterial[materialIndex].color.set(text.cubeColor7);  });
+        // var cc8  = gui.addColor(text, 'cubeColor8').onChange(function(){  materialIndex = 8; cubeMaterial[materialIndex].color.set(text.cubeColor8);  });
+        // var cc9  = gui.addColor(text, 'cubeColor9').onChange(function(){  materialIndex = 9; cubeMaterial[materialIndex].color.set(text.cubeColor9);  });
+        // var cc10 = gui.addColor(text, 'cubeColor10').onChange(function(){  materialIndex = 10; cubeMaterial[materialIndex].color.set(text.cubeColor10);  });
+        // var cc11 = gui.addColor(text, 'cubeColor11').onChange(function(){  materialIndex = 11; cubeMaterial[materialIndex].color.set(text.cubeColor11);  });
+        // var cc12 = gui.addColor(text, 'cubeColor12').onChange(function(){  materialIndex = 12; cubeMaterial[materialIndex].color.set(text.cubeColor12);  });
+        // var cc13 = gui.addColor(text, 'cubeColor13').onChange(function(){  materialIndex = 13; cubeMaterial[materialIndex].color.set(text.cubeColor13);  });
+        // var cc14 = gui.addColor(text, 'cubeColor14').onChange(function(){  materialIndex = 14; cubeMaterial[materialIndex].color.set(text.cubeColor14);  });
+        // var cc15 = gui.addColor(text, 'cubeColor15').onChange(function(){  materialIndex = 15; cubeMaterial[materialIndex].color.set(text.cubeColor15);  });
 
 
         document.addEventListener( 'mousemove', onDocumentMouseMove, false );
-        document.addEventListener( 'mousedown', onDocumentMouseDown, false );
+        document.addEventListener( 'dblclick', onDocumentMouseDown, false );
         document.addEventListener( 'keydown', onDocumentKeyDown, false );
         document.addEventListener( 'keyup', onDocumentKeyUp, false );
 
@@ -162,74 +201,80 @@
           reader.addEventListener( 'load', function() {
             loadFlag = true;
             const mm = JSON.parse(reader.result).material;
-            text.cubeColor0 = colorToText(mm[0]);
-            text.cubeColor1 = colorToText(mm[1]);
-            text.cubeColor2 = colorToText(mm[2]);
-            text.cubeColor3 = colorToText(mm[3]);
-            text.cubeColor4 = colorToText(mm[4]);
-            text.cubeColor5 = colorToText(mm[5]);
-            text.cubeColor6 = colorToText(mm[6]);
-            text.cubeColor7 = colorToText(mm[7]);
-            text.cubeColor8 = colorToText(mm[8]);
-            text.cubeColor9 = colorToText(mm[9]);
-            text.cubeColor10 = colorToText(mm[10]);
-            text.cubeColor11 = colorToText(mm[11]);
-            text.cubeColor12 = colorToText(mm[12]);
-            text.cubeColor13 = colorToText(mm[13]);
-            text.cubeColor14 = colorToText(mm[14]);
-            text.cubeColor15 = colorToText(mm[15]);
+
+            for (let l = 0; l < 16; ++l) {
+              cubeMaterial[l].color.set(colorToText(mm[l]));
+              document.getElementById(colorNumTextArray[l]).value = colorToText(mm[l]);
+            }
+            // text.cubeColor0 = colorToText(mm[0]);
+            // text.cubeColor1 = colorToText(mm[1]);
+            // text.cubeColor2 = colorToText(mm[2]);
+            // text.cubeColor3 = colorToText(mm[3]);
+            // text.cubeColor4 = colorToText(mm[4]);
+            // text.cubeColor5 = colorToText(mm[5]);
+            // text.cubeColor6 = colorToText(mm[6]);
+            // text.cubeColor7 = colorToText(mm[7]);
+            // text.cubeColor8 = colorToText(mm[8]);
+            // text.cubeColor9 = colorToText(mm[9]);
+            // text.cubeColor10 = colorToText(mm[10]);
+            // text.cubeColor11 = colorToText(mm[11]);
+            // text.cubeColor12 = colorToText(mm[12]);
+            // text.cubeColor13 = colorToText(mm[13]);
+            // text.cubeColor14 = colorToText(mm[14]);
+            // text.cubeColor15 = colorToText(mm[15]);
 
 
-            gui.remove(cc0);
-            gui.remove(cc1);
-            gui.remove(cc2);
-            gui.remove(cc3);
-            gui.remove(cc4);
-            gui.remove(cc5);
-            gui.remove(cc6);
-            gui.remove(cc7);
-            gui.remove(cc8);
-            gui.remove(cc9);
-            gui.remove(cc10);
-            gui.remove(cc11);
-            gui.remove(cc12);
-            gui.remove(cc13);
-            gui.remove(cc14);
-            gui.remove(cc15);
+            // gui.remove(cc0);
+            // gui.remove(cc1);
+            // gui.remove(cc2);
+            // gui.remove(cc3);
+            // gui.remove(cc4);
+            // gui.remove(cc5);
+            // gui.remove(cc6);
+            // gui.remove(cc7);
+            // gui.remove(cc8);
+            // gui.remove(cc9);
+            // gui.remove(cc10);
+            // gui.remove(cc11);
+            // gui.remove(cc12);
+            // gui.remove(cc13);
+            // gui.remove(cc14);
+            // gui.remove(cc15);
 
-            gui.addColor(text, 'cubeColor0').onChange(function(){  materialIndex = 0; cubeMaterial[materialIndex].color.set(text.cubeColor0); });
-            gui.addColor(text, 'cubeColor1').onChange(function(){  materialIndex = 1; cubeMaterial[materialIndex].color.set(text.cubeColor1);  });
-            gui.addColor(text, 'cubeColor2').onChange(function(){  materialIndex = 2; cubeMaterial[materialIndex].color.set(text.cubeColor2);  });
-            gui.addColor(text, 'cubeColor3').onChange(function(){  materialIndex = 3; cubeMaterial[materialIndex].color.set(text.cubeColor3);  });
-            gui.addColor(text, 'cubeColor4').onChange(function(){  materialIndex = 4; cubeMaterial[materialIndex].color.set(text.cubeColor4);  });
-            gui.addColor(text, 'cubeColor5').onChange(function(){  materialIndex = 5; cubeMaterial[materialIndex].color.set(text.cubeColor5);  });
-            gui.addColor(text, 'cubeColor6').onChange(function(){  materialIndex = 6; cubeMaterial[materialIndex].color.set(text.cubeColor6);  });
-            gui.addColor(text, 'cubeColor7').onChange(function(){  materialIndex = 7; cubeMaterial[materialIndex].color.set(text.cubeColor7);  });
-            gui.addColor(text, 'cubeColor8').onChange(function(){  materialIndex = 8; cubeMaterial[materialIndex].color.set(text.cubeColor8);  });
-            gui.addColor(text, 'cubeColor9').onChange(function(){  materialIndex = 9; cubeMaterial[materialIndex].color.set(text.cubeColor9);  });
-            gui.addColor(text, 'cubeColor10').onChange(function(){  materialIndex = 10; cubeMaterial[materialIndex].color.set(text.cubeColor10);  });
-            gui.addColor(text, 'cubeColor11').onChange(function(){  materialIndex = 11; cubeMaterial[materialIndex].color.set(text.cubeColor11);  });
-            gui.addColor(text, 'cubeColor12').onChange(function(){  materialIndex = 12; cubeMaterial[materialIndex].color.set(text.cubeColor12);  });
-            gui.addColor(text, 'cubeColor13').onChange(function(){  materialIndex = 13; cubeMaterial[materialIndex].color.set(text.cubeColor13);  });
-            gui.addColor(text, 'cubeColor14').onChange(function(){  materialIndex = 14; cubeMaterial[materialIndex].color.set(text.cubeColor14);  });
-            gui.addColor(text, 'cubeColor15').onChange(function(){  materialIndex = 15; cubeMaterial[materialIndex].color.set(text.cubeColor15);  });
+            // gui.addColor(text, 'cubeColor0').onChange(function(){  materialIndex = 0; cubeMaterial[materialIndex].color.set(text.cubeColor0); });
+            // gui.addColor(text, 'cubeColor1').onChange(function(){  materialIndex = 1; cubeMaterial[materialIndex].color.set(text.cubeColor1);  });
+            // gui.addColor(text, 'cubeColor2').onChange(function(){  materialIndex = 2; cubeMaterial[materialIndex].color.set(text.cubeColor2);  });
+            // gui.addColor(text, 'cubeColor3').onChange(function(){  materialIndex = 3; cubeMaterial[materialIndex].color.set(text.cubeColor3);  });
+            // gui.addColor(text, 'cubeColor4').onChange(function(){  materialIndex = 4; cubeMaterial[materialIndex].color.set(text.cubeColor4);  });
+            // gui.addColor(text, 'cubeColor5').onChange(function(){  materialIndex = 5; cubeMaterial[materialIndex].color.set(text.cubeColor5);  });
+            // gui.addColor(text, 'cubeColor6').onChange(function(){  materialIndex = 6; cubeMaterial[materialIndex].color.set(text.cubeColor6);  });
+            // gui.addColor(text, 'cubeColor7').onChange(function(){  materialIndex = 7; cubeMaterial[materialIndex].color.set(text.cubeColor7);  });
+            // gui.addColor(text, 'cubeColor8').onChange(function(){  materialIndex = 8; cubeMaterial[materialIndex].color.set(text.cubeColor8);  });
+            // gui.addColor(text, 'cubeColor9').onChange(function(){  materialIndex = 9; cubeMaterial[materialIndex].color.set(text.cubeColor9);  });
+            // gui.addColor(text, 'cubeColor10').onChange(function(){  materialIndex = 10; cubeMaterial[materialIndex].color.set(text.cubeColor10);  });
+            // gui.addColor(text, 'cubeColor11').onChange(function(){  materialIndex = 11; cubeMaterial[materialIndex].color.set(text.cubeColor11);  });
+            // gui.addColor(text, 'cubeColor12').onChange(function(){  materialIndex = 12; cubeMaterial[materialIndex].color.set(text.cubeColor12);  });
+            // gui.addColor(text, 'cubeColor13').onChange(function(){  materialIndex = 13; cubeMaterial[materialIndex].color.set(text.cubeColor13);  });
+            // gui.addColor(text, 'cubeColor14').onChange(function(){  materialIndex = 14; cubeMaterial[materialIndex].color.set(text.cubeColor14);  });
+            // gui.addColor(text, 'cubeColor15').onChange(function(){  materialIndex = 15; cubeMaterial[materialIndex].color.set(text.cubeColor15);  });
 
             for (const v of JSON.parse(reader.result).voxel) {
-              const mat = JSON.parse(reader.result).material[v.m];
-              cubeMaterial[v.m].color = new THREE.Color( mat.r, mat.g, mat.b );
+//              const mat = JSON.parse(reader.result).material[v.m];
+//              cubeMaterial[v.m].color = new THREE.Color( mat.r, mat.g, mat.b );
               var voxel = new THREE.Mesh( cubeGeo, cubeMaterial[v.m] );
                 voxel.position.set(v.x * 50 - 25, v.y * 50 + 25, v.z * 50 - 25);
                 voxel.position.divideScalar( 50 ).floor().multiplyScalar( 50 ).addScalar( 25 );
                 scene.add( voxel );
 
                 objects.push( voxel );
+                objectsMaterial.push( cubeMaterial[v.m] );
 
 
-                contents += "{"
-                    + '"x":' + ((voxel.position.x + 25) / 50) + ","
-                    + '"y":' + ((voxel.position.y - 25) / 50) + ","
-                    + '"z":' + ((voxel.position.z + 25) / 50) + ","
-                    + '"m":' + v.m + "},";
+                // contents += "{"
+                //     + '"x":' + ((voxel.position.x + 25) / 50) + ","
+                //     + '"y":' + ((voxel.position.y - 25) / 50) + ","
+                //     + '"z":' + ((voxel.position.z + 25) / 50) + ","
+                //     + '"m":' + v.m + "},";
                     
 
             }
@@ -346,32 +391,35 @@
         }
 
         function render() {
-            cubeMaterial[0].color.set(text.cubeColor0);
-            cubeMaterial[1].color.set(text.cubeColor1);
-            cubeMaterial[2].color.set(text.cubeColor2);
-            cubeMaterial[3].color.set(text.cubeColor3);
-            cubeMaterial[4].color.set(text.cubeColor4);
-            cubeMaterial[5].color.set(text.cubeColor5);
-            cubeMaterial[6].color.set(text.cubeColor6);
-            cubeMaterial[7].color.set(text.cubeColor7);
-            cubeMaterial[8].color.set(text.cubeColor8);
-            cubeMaterial[9].color.set(text.cubeColor9);
-            cubeMaterial[10].color.set(text.cubeColor10);
-            cubeMaterial[11].color.set(text.cubeColor11);
-            cubeMaterial[12].color.set(text.cubeColor12);
-            cubeMaterial[13].color.set(text.cubeColor13);
-            cubeMaterial[14].color.set(text.cubeColor14);
-            cubeMaterial[15].color.set(text.cubeColor15);
-            renderer.setClearColor(text.backgroundColor, 1.0);
+          for (let l = 0; l < 16; ++l) {
+            cubeMaterial[l].color.set(document.getElementById(colorNumTextArray[l]).value);
+          }
+            // cubeMaterial[0].color.set(text.cubeColor0);
+            // cubeMaterial[1].color.set(text.cubeColor1);
+            // cubeMaterial[2].color.set(text.cubeColor2);
+            // cubeMaterial[3].color.set(text.cubeColor3);
+            // cubeMaterial[4].color.set(text.cubeColor4);
+            // cubeMaterial[5].color.set(text.cubeColor5);
+            // cubeMaterial[6].color.set(text.cubeColor6);
+            // cubeMaterial[7].color.set(text.cubeColor7);
+            // cubeMaterial[8].color.set(text.cubeColor8);
+            // cubeMaterial[9].color.set(text.cubeColor9);
+            // cubeMaterial[10].color.set(text.cubeColor10);
+            // cubeMaterial[11].color.set(text.cubeColor11);
+            // cubeMaterial[12].color.set(text.cubeColor12);
+            // cubeMaterial[13].color.set(text.cubeColor13);
+            // cubeMaterial[14].color.set(text.cubeColor14);
+            // cubeMaterial[15].color.set(text.cubeColor15);
+            renderer.setClearColor(document.getElementById("background").value, 1.0);
             renderer.render( scene, camera );
         }
-        function download() {
-          const blob = new Blob([ contents ], { "type" : "application/x-msdownload" });
+        // function download() {
+        //   const blob = new Blob([ contents ], { "type" : "application/x-msdownload" });
         
-          window.URL = window.URL || window.webkitURL;
-          document.getElementById("download").setAttribute("href", window.URL.createObjectURL(blob));
-          // document.getElementById("download").setAttribute("download", "tmp.txt");
-        }
+        //   window.URL = window.URL || window.webkitURL;
+        //   document.getElementById("download").setAttribute("href", window.URL.createObjectURL(blob));
+        //   // document.getElementById("download").setAttribute("download", "tmp.txt");
+        // }
 
         function downLoadJson() {
           for (const voxel of objects) {
@@ -394,12 +442,14 @@
 
 
           let material = '"material":[';
-          for (const m of cubeMaterial) {
+          for (let l = 0; l < 16; ++l) {
+//          for (const m of cubeMaterial) {
+            cubeMaterial[l].color.set(document.getElementById(colorNumTextArray[l]).value);
             material += "{"
-                      + '"r":' + m.color.r + ","
-                      + '"g":' + m.color.g + ","
-                      + '"b":' + m.color.b + ","
-                      + '"a":' + m.opacity + "},";
+                      + '"r":' + cubeMaterial[l].color.r + ","
+                      + '"g":' + cubeMaterial[l].color.g + ","
+                      + '"b":' + cubeMaterial[l].color.b + ","
+                      + '"a":' + cubeMaterial[l].opacity + "},";
           }
           const mat = material.substr(0, material.length - 1) + "]}";
 
@@ -465,11 +515,33 @@
     </script>
   </head>
   <body>
+    <div style="position: absolute; left:300px;">
+      put    : double click<br>
+      delete : shift  click
+    </div>
     <div style="position: absolute;">
       <button type="button" onclick="downLoadJson();">ダウンロード</button>
       <form name="myform">
         <input name="myfile" type="file" />
       </form>
+      <input type="color" id="background" value="#dddddd">Background<br>
+      <input type="color" id="color1" value="#ff0000"><br>
+      <input type="color" id="color2" value="#00ff00"><br>
+      <input type="color" id="color3" value="#0000ff"><br>
+      <input type="color" id="color4" value="#ffff00"><br>
+      <input type="color" id="color5" value="#00ffff"><br>
+      <input type="color" id="color6" value="#ff00ff"><br>
+      <input type="color" id="color7" value="#ffffff"><br>
+      <input type="color" id="color8" value="#777777"><br>
+      <input type="color" id="color9" value="#000000"><br>
+      <input type="color" id="color10" value="#770000"><br>
+      <input type="color" id="color11" value="#007700"><br>
+      <input type="color" id="color12" value="#000077"><br>
+      <input type="color" id="color13" value="#777700"><br>
+      <input type="color" id="color14" value="#007777"><br>
+      <input type="color" id="color15" value="#770077"><br>
+      <input type="color" id="color16" value="#444444"><br>
+
     </div>          
   </body>
 </html>
