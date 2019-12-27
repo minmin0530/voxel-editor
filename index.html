@@ -11,11 +11,13 @@
         var rollOverMesh, rollOverMaterial;
         var cubeGeo, cubeMaterial = [], materialIndex = 0;
 
+        var controls;
         var objects = [];
         var objectsMaterial = [];
         var contents = "";
         var form;
         var loadFlag = false;
+        var anglePutFlag = false;
         // var text = {
 
         //     cubeColor0 : "#ff0000",
@@ -140,10 +142,10 @@
         raycaster = new THREE.Raycaster();
         mouse = new THREE.Vector2();
                 
-        var gridHelper = new THREE.GridHelper( 5000, 100 );
+        var gridHelper = new THREE.GridHelper( 2500, 50 );
         scene.add( gridHelper );
 
-        var geometry = new THREE.PlaneBufferGeometry( 5000, 5000 );
+        var geometry = new THREE.PlaneBufferGeometry( 2500, 2500 );
         geometry.rotateX( - Math.PI / 2 );
 
         plane = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial( { visible: false } ) );
@@ -163,7 +165,7 @@
         renderer.setSize( window.innerWidth, window.innerHeight );
         document.body.appendChild( renderer.domElement );
 
-        var controls = new THREE.OrbitControls( camera, renderer.domElement );
+        controls = new THREE.OrbitControls( camera, renderer.domElement );
 
         // gui = new dat.GUI();
 
@@ -188,7 +190,7 @@
 
 
         document.addEventListener( 'mousemove', onDocumentMouseMove, false );
-        document.addEventListener( 'dblclick', onDocumentMouseDown, false );
+        document.addEventListener( 'mousedown', onDocumentMouseDown, false );
         document.addEventListener( 'keydown', onDocumentKeyDown, false );
         document.addEventListener( 'keyup', onDocumentKeyUp, false );
 
@@ -282,7 +284,7 @@
             
           })
         });
-
+        renderer.setClearColor(document.getElementById("background").value, 1.0);
         tick();
         // 毎フレーム時に実行されるループイベントです
         function tick() {
@@ -303,70 +305,72 @@
 
 
       function onDocumentMouseMove( event ) {
-        event.preventDefault();
 
-        mouse.set( ( event.clientX / window.innerWidth ) * 2 - 1, - ( event.clientY / window.innerHeight ) * 2 + 1 );
+              event.preventDefault();
 
-        raycaster.setFromCamera( mouse, camera );
+              mouse.set( ( event.clientX / window.innerWidth ) * 2 - 1, - ( event.clientY / window.innerHeight ) * 2 + 1 );
 
-        var intersects = raycaster.intersectObjects( objects );
+              raycaster.setFromCamera( mouse, camera );
 
-        if ( intersects.length > 0 ) {
+              var intersects = raycaster.intersectObjects( objects );
 
-            var intersect = intersects[ 0 ];
-            rollOverMesh.position.copy( intersect.point ).add( intersect.face.normal );
-            rollOverMesh.position.divideScalar( 50 ).floor().multiplyScalar( 50 ).addScalar( 25 );
+              if ( intersects.length > 0 ) {
 
-        }
+                  var intersect = intersects[ 0 ];
+                  rollOverMesh.position.copy( intersect.point ).add( intersect.face.normal );
+                  rollOverMesh.position.divideScalar( 50 ).floor().multiplyScalar( 50 ).addScalar( 25 );
 
-        render();
+              }
 
-        }
+              render();
+      }
 
         function onDocumentMouseDown( event ) {
+            if (isShiftDown) {
 
-        event.preventDefault();
+                event.preventDefault();
 
-        mouse.set( ( event.clientX / window.innerWidth ) * 2 - 1, - ( event.clientY / window.innerHeight ) * 2 + 1 );
+                mouse.set( ( event.clientX / window.innerWidth ) * 2 - 1, - ( event.clientY / window.innerHeight ) * 2 + 1 );
 
-        raycaster.setFromCamera( mouse, camera );
+                raycaster.setFromCamera( mouse, camera );
 
-        var intersects = raycaster.intersectObjects( objects );
+                var intersects = raycaster.intersectObjects( objects );
 
-        if ( intersects.length > 0 ) {
+                if ( intersects.length > 0 ) {
 
-            var intersect = intersects[ 0 ];
+                    var intersect = intersects[ 0 ];
 
-            // delete cube
+                    // delete cube
 
-            if ( isShiftDown ) {
+                    if ( anglePutFlag ) {
 
-                if ( intersect.object !== plane ) {
+                        if ( intersect.object !== plane ) {
 
-                    scene.remove( intersect.object );
+                            scene.remove( intersect.object );
 
-                    objectsMaterial.splice( objectsMaterial.indexOf( intersect.object.material ), 1 );
-                    objects.splice( objects.indexOf( intersect.object ), 1 );
+                            objectsMaterial.splice( objectsMaterial.indexOf( intersect.object.material ), 1 );
+                            objects.splice( objects.indexOf( intersect.object ), 1 );
+
+                        }
+
+                        // create cube
+
+                    } else {
+
+                        var voxel = new THREE.Mesh( cubeGeo, cubeMaterial[materialIndex] );
+                        voxel.position.copy( intersect.point ).add( intersect.face.normal );
+                        voxel.position.divideScalar( 50 ).floor().multiplyScalar( 50 ).addScalar( 25 );
+                        scene.add( voxel );
+
+                        objects.push( voxel );
+                        objectsMaterial.push( cubeMaterial[materialIndex] );
+
+                    }
+
+                    render();
 
                 }
-
-                // create cube
-
-            } else {
-
-                var voxel = new THREE.Mesh( cubeGeo, cubeMaterial[materialIndex] );
-                voxel.position.copy( intersect.point ).add( intersect.face.normal );
-                voxel.position.divideScalar( 50 ).floor().multiplyScalar( 50 ).addScalar( 25 );
-                scene.add( voxel );
-
-                objects.push( voxel );
-                objectsMaterial.push( cubeMaterial[materialIndex] );
-
             }
-
-            render();
-
-        }
 
         }
 
@@ -391,9 +395,9 @@
         }
 
         function render() {
-          for (let l = 0; l < 16; ++l) {
-            cubeMaterial[l].color.set(document.getElementById(colorNumTextArray[l]).value);
-          }
+          // for (let l = 0; l < 16; ++l) {
+          //   cubeMaterial[l].color.set(document.getElementById(colorNumTextArray[l]).value);
+          // }
             // cubeMaterial[0].color.set(text.cubeColor0);
             // cubeMaterial[1].color.set(text.cubeColor1);
             // cubeMaterial[2].color.set(text.cubeColor2);
@@ -410,7 +414,7 @@
             // cubeMaterial[13].color.set(text.cubeColor13);
             // cubeMaterial[14].color.set(text.cubeColor14);
             // cubeMaterial[15].color.set(text.cubeColor15);
-            renderer.setClearColor(document.getElementById("background").value, 1.0);
+//            renderer.setClearColor(document.getElementById("background").value, 1.0);
             renderer.render( scene, camera );
         }
         // function download() {
@@ -512,18 +516,61 @@
             return colorText;
         }
 
+        function boxAll(num) {
+          for (let x = -num/2; x < num/2; ++x) {
+            for (let y = 0; y < num; ++y) {
+              for (let z = -num/2; z < num/2; ++z) {
+                var voxel = new THREE.Mesh( cubeGeo, cubeMaterial[materialIndex] );
+                voxel.position.set(x * 50, y * 50, z * 50);//copy( intersect.point ).add( intersect.face.normal );
+                voxel.position.divideScalar( 50 ).floor().multiplyScalar( 50 ).addScalar( 25 );
+                scene.add( voxel );
+
+                objects.push( voxel );
+                objectsMaterial.push( cubeMaterial[materialIndex] );
+              }
+            }
+          }
+        }
+
+        function allClear() {
+            for (const v of objects) {
+                scene.remove(v);
+            }
+            objects.length = 0;
+            objects = [];
+            objectsMaterial.length = 0;
+            objectsMaterial = [];
+            rollOverMesh.position.set(25, 25, 25);
+            rollOverMesh.position.divideScalar( 50 ).floor().multiplyScalar( 50 ).addScalar( 25 );
+
+            objects.push( plane );
+
+        }
+
+        function anglePut() {
+          anglePutFlag = !anglePutFlag;
+          if (anglePutFlag) {
+            document.getElementById("anglePut").innerHTML = "設置";
+          } else {
+            document.getElementById("anglePut").innerHTML = "削除";
+          }
+        }
     </script>
   </head>
   <body>
-    <div style="position: absolute; left:300px;">
-      put    : double click<br>
-      delete : shift  click
+    <div style="font-size: 32px; position: absolute; left:300px;">
+       shift  click
     </div>
     <div style="position: absolute;">
       <button type="button" onclick="downLoadJson();">ダウンロード</button>
       <form name="myform">
         <input name="myfile" type="file" />
       </form>
+      <button onclick="anglePut();" id="anglePut">削除</button><br>
+      <button onclick="allClear();">AllClear</button><br>
+      <button onclick="boxAll(4);">4×4×4</button><br>
+      <button onclick="boxAll(8);">8×8×8</button><br>
+      <button onclick="boxAll(16);">16×16×16</button><br>
       <input type="color" id="background" value="#dddddd">Background<br>
       <input type="color" id="color1" value="#ff0000"><br>
       <input type="color" id="color2" value="#00ff00"><br>
