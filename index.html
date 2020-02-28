@@ -2,6 +2,7 @@
   <head>
     <meta charset="utf-8" />
     <script src="three.min.js"></script>
+    <script src="OrbitControls.js"></script>
     <script>
         var camera, scene, renderer;
         var plane;
@@ -10,7 +11,7 @@
         var rollOverMesh, rollOverMaterial;
         var cubeGeo, cubeMaterial = [], materialIndex = 0;
 
-//        var controls;
+        var controls;
         var objects = [];
         var objectsMaterial = [];
         var contents = "";
@@ -169,7 +170,7 @@
         renderer.setSize( window.innerWidth, window.innerHeight );
         document.body.appendChild( renderer.domElement );
 
-        // controls = new THREE.OrbitControls( camera, renderer.domElement );
+        controls = new THREE.OrbitControls( camera, renderer.domElement );
 
         // gui = new dat.GUI();
 
@@ -197,7 +198,7 @@
         document.addEventListener( 'mousedown', onDocumentMouseDown, false );
         document.addEventListener( 'keydown', onDocumentKeyDown, false );
         document.addEventListener( 'keyup', onDocumentKeyUp, false );
-        document.addEventListener( 'scroll', onDocumentScroll, false );
+        // document.addEventListener( 'scroll', onDocumentScroll, false );
 
         window.addEventListener( 'resize', onWindowResize, false );
         form = document.forms.myform;
@@ -293,7 +294,7 @@
         tick();
         // 毎フレーム時に実行されるループイベントです
         function tick() {
-          // controls.update();
+          controls.update();
           render();
 //          renderer.render(scene, camera); // レンダリング
           requestAnimationFrame(tick);
@@ -308,22 +309,22 @@
 
       }
 
-var scroll = 8;
-      function onDocumentScroll() {
-        var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-        cameraZoom += (scrollTop - 8) * 10;
-        console.log(scrollTop);
-        // if (scroll < scrollTop) {
-        //   cameraZoom += 100;
-        // }
-        // if (scroll > scrollTop) {
-        //   cameraZoom -= 100;
-        // }
-        camera.position.set(cameraZoom * Math.cos(Math.PI / 180.0 * cameraAngle), cameraZoom, cameraZoom * Math.sin(Math.PI / 180.0 * cameraAngle));
-        camera.lookAt(0, 0, 0);
-//        scroll = scrollTop;
+// var scroll = 8;
+//       function onDocumentScroll() {
+//         var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+//         cameraZoom += (scrollTop - 8) * 10;
+//         console.log(scrollTop);
+//         // if (scroll < scrollTop) {
+//         //   cameraZoom += 100;
+//         // }
+//         // if (scroll > scrollTop) {
+//         //   cameraZoom -= 100;
+//         // }
+//         camera.position.set(cameraZoom * Math.cos(Math.PI / 180.0 * cameraAngle), cameraZoom, cameraZoom * Math.sin(Math.PI / 180.0 * cameraAngle));
+//         camera.lookAt(0, 0, 0);
+// //        scroll = scrollTop;
 
-      }
+//       }
 
       function onDocumentMouseMove( event ) {
 
@@ -345,15 +346,15 @@ var scroll = 8;
 
               render();
 
-              if (isShiftDown) {
-                  cameraAngle += mouse.x + mouse.y;
-                  camera.position.set(cameraZoom * Math.cos(Math.PI / 180.0 * cameraAngle), cameraZoom, cameraZoom * Math.sin(Math.PI / 180.0 * cameraAngle));
-                  camera.lookAt(0, 0, 0);
-              }
+              // if (isShiftDown) {
+              //     cameraAngle += mouse.x + mouse.y;
+              //     camera.position.set(cameraZoom * Math.cos(Math.PI / 180.0 * cameraAngle), cameraZoom, cameraZoom * Math.sin(Math.PI / 180.0 * cameraAngle));
+              //     camera.lookAt(0, 0, 0);
+              // }
       }
 
         function onDocumentMouseDown( event ) {
-            if (isShiftDown == false) {
+            if (isShiftDown) {
 
 
                 event.preventDefault();
@@ -448,7 +449,7 @@ var scroll = 8;
             // cubeMaterial[13].color.set(text.cubeColor13);
             // cubeMaterial[14].color.set(text.cubeColor14);
             // cubeMaterial[15].color.set(text.cubeColor15);
-//            renderer.setClearColor(document.getElementById("background").value, 1.0);
+            renderer.setClearColor(document.getElementById("background").value, 1.0);
             renderer.render( scene, camera );
         }
         // function download() {
@@ -602,8 +603,8 @@ var scroll = 8;
     </script>
   </head>
   <body>
-    <div style="font-size: 32px; position: absolute; left:300px;">
-       voxel-editor
+    <div style="color: red; font-size: 48px; position: absolute; left:300px;">
+       shift click
     </div>
     <div style="position: absolute;">
       <button type="button" onclick="downLoadJson();">ダウンロード</button>
