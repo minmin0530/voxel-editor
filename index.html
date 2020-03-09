@@ -17,6 +17,7 @@
         var contents = "";
         var form;
         var loadFlag = false;
+        var speedFlag = false;
         var anglePutFlag = false;
         var colorChangeFlag = false;
         var cameraAngle = 0.0;
@@ -165,6 +166,10 @@
         directionalLight.position.set( 1, 0.75, 0.5 ).normalize();
         scene.add( directionalLight );
 
+        var directionalLight2 = new THREE.DirectionalLight( 0xffffff );
+        directionalLight2.position.set( -1, 0.75, -0.5 ).normalize();
+        scene.add( directionalLight2 );
+
         renderer = new THREE.WebGLRenderer( { antialias: true } );
         renderer.setPixelRatio( window.devicePixelRatio );
         renderer.setSize( window.innerWidth, window.innerHeight );
@@ -193,7 +198,6 @@
         // var cc14 = gui.addColor(text, 'cubeColor14').onChange(function(){  materialIndex = 14; cubeMaterial[materialIndex].color.set(text.cubeColor14);  });
         // var cc15 = gui.addColor(text, 'cubeColor15').onChange(function(){  materialIndex = 15; cubeMaterial[materialIndex].color.set(text.cubeColor15);  });
 
-
         document.addEventListener( 'mousemove', onDocumentMouseMove, false );
         document.addEventListener( 'mousedown', onDocumentMouseDown, false );
         document.addEventListener( 'keydown', onDocumentKeyDown, false );
@@ -207,7 +211,7 @@
           var reader = new FileReader();
           reader.readAsText( result );
           reader.addEventListener( 'load', function() {
-            loadFlag = true;
+            // loadFlag = true;
             const mm = JSON.parse(reader.result).material;
 
             for (let l = 0; l < 16; ++l) {
@@ -294,6 +298,9 @@
         tick();
         // 毎フレーム時に実行されるループイベントです
         function tick() {
+          if (loadFlag) {
+            timeLine();
+          }
           controls.update();
           render();
 //          renderer.render(scene, camera); // レンダリング
@@ -600,6 +607,84 @@
           }
 
         }
+
+        function loadFile1(flag){
+          vvv = 0;
+          timeCount = 0;
+          allClear();
+          var fileName = "https://ai5.jp/voxel-editor/voxel_model004.txt";
+          httpObj = new XMLHttpRequest();
+          httpObj.open('GET',fileName+"?"+(new Date()).getTime(),true);
+          // ?以降はキャッシュされたファイルではなく、毎回読み込むためのもの
+          httpObj.send(null);
+          httpObj.onreadystatechange = function(){
+              if ( (httpObj.readyState == 4) && (httpObj.status == 200) ){
+                responseText = httpObj.responseText;
+                json = JSON.parse(responseText);
+
+                loadFlag = true;
+                speedFlag = flag;
+
+
+              }
+          }
+        }
+
+        function loadFile2(flag){
+          vvv = 0;
+          timeCount = 0;
+          allClear();
+          var fileName = "https://ai5.jp/voxel-editor/MageMin.txt";
+          httpObj = new XMLHttpRequest();
+          httpObj.open('GET',fileName+"?"+(new Date()).getTime(),true);
+          // ?以降はキャッシュされたファイルではなく、毎回読み込むためのもの
+          httpObj.send(null);
+          httpObj.onreadystatechange = function(){
+              if ( (httpObj.readyState == 4) && (httpObj.status == 200) ){
+                responseText = httpObj.responseText;
+                json = JSON.parse(responseText);
+
+                loadFlag = true;
+                speedFlag = flag;
+
+              }
+          }
+        }
+
+        var json;
+        var responseText = "";
+        var timeCount = 0;
+        var vvv = 0;
+
+        function timeLine() {
+          const mm = json.material;
+
+          for (let l = 0; l < 16; ++l) {
+            cubeMaterial[l].color.set(colorToText(mm[l]));
+            document.getElementById(colorNumTextArray[l]).value = colorToText(mm[l]);
+          }
+
+          const vv = json.voxel;
+          var speed = 20;
+          if (speedFlag) {
+            speed = 1;
+          }
+          if (++timeCount > speed) {
+            timeCount = 0
+            if ( vvv < vv.length ) {
+            
+              var voxel = new THREE.Mesh( cubeGeo, cubeMaterial[vv[vvv].m] );
+                voxel.position.set(vv[vvv].x * 50 - 25, vv[vvv].y * 50 + 25, vv[vvv].z * 50 - 25);
+                voxel.position.divideScalar( 50 ).floor().multiplyScalar( 50 ).addScalar( 25 );
+                scene.add( voxel );
+                objects.push( voxel );
+                objectsMaterial.push( cubeMaterial[vv[vvv].m] );
+            }
+            ++vvv;
+
+          }
+
+        }
     </script>
   </head>
   <body>
@@ -607,7 +692,12 @@
        shift click
     </div>
     <div style="position: absolute;">
-      <button type="button" onclick="downLoadJson();">ダウンロード</button>
+      <a href="https://ai5.jp/voxel-editor/document">使い方(説明書)</a><br>
+      <br>
+      <button type="button" onclick="loadFile1(true);">example1</button><br>
+      <button type="button" onclick="loadFile2(true);">example2</button><br>
+      <br>
+      <button type="button" onclick="downLoadJson();">ダウンロード</button><br>
       <form name="myform">
         <input name="myfile" type="file" />
       </form>
