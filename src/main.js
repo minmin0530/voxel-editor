@@ -69,13 +69,13 @@ class Main {
 
         controls = new THREE.OrbitControls( camera, renderer.domElement );
 
-        document.addEventListener( 'mousemove', onDocumentMouseMove, false );
-        document.addEventListener( 'mousedown', onDocumentMouseDown, false );
-        document.addEventListener( 'keydown', onDocumentKeyDown, false );
-        document.addEventListener( 'keyup', onDocumentKeyUp, false );
+        document.addEventListener( 'mousemove', this.onDocumentMouseMove, false );
+        document.addEventListener( 'mousedown', this.onDocumentMouseDown, false );
+        document.addEventListener( 'keydown', this.onDocumentKeyDown, false );
+        document.addEventListener( 'keyup', this.onDocumentKeyUp, false );
         // document.addEventListener( 'scroll', onDocumentScroll, false );
 
-        window.addEventListener( 'resize', onWindowResize, false );
+        window.addEventListener( 'resize', this.onWindowResize, false );
         form = document.forms.myform;
         form.myfile.addEventListener('change', function(e) {
           var result = e.target.files[0];
@@ -103,5 +103,118 @@ class Main {
         });
         renderer.setClearColor(document.getElementById("background").value, 1.0);
     }
+
+
+    onWindowResize() {
+
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+
+      renderer.setSize( window.innerWidth, window.innerHeight );
+
+    }
+
+    onDocumentMouseMove( event ) {
+
+            event.preventDefault();
+
+            mouse.set( ( event.clientX / window.innerWidth ) * 2 - 1, - ( event.clientY / window.innerHeight ) * 2 + 1 );
+
+            raycaster.setFromCamera( mouse, camera );
+
+            var intersects = raycaster.intersectObjects( objects );
+
+            if ( intersects.length > 0 ) {
+
+                var intersect = intersects[ 0 ];
+                rollOverMesh.position.copy( intersect.point ).add( intersect.face.normal );
+                rollOverMesh.position.divideScalar( 50 ).floor().multiplyScalar( 50 ).addScalar( 25 );
+
+            }
+
+            render();
+
+            // if (isShiftDown) {
+            //     cameraAngle += mouse.x + mouse.y;
+            //     camera.position.set(cameraZoom * Math.cos(Math.PI / 180.0 * cameraAngle), cameraZoom, cameraZoom * Math.sin(Math.PI / 180.0 * cameraAngle));
+            //     camera.lookAt(0, 0, 0);
+            // }
+    }
+
+    onDocumentMouseDown( event ) {
+          if (isShiftDown) {
+
+
+              event.preventDefault();
+
+              mouse.set( ( event.clientX / window.innerWidth ) * 2 - 1, - ( event.clientY / window.innerHeight ) * 2 + 1 );
+
+              raycaster.setFromCamera( mouse, camera );
+
+              var intersects = raycaster.intersectObjects( objects );
+
+              if ( intersects.length > 0 ) {
+
+                  var intersect = intersects[ 0 ];
+
+                  // delete cube
+
+                  if ( anglePutFlag ) {
+
+                      if ( intersect.object !== plane ) {
+
+                          scene.remove( intersect.object );
+
+                          objectsMaterial.splice( objectsMaterial.indexOf( intersect.object.material ), 1 );
+                          objects.splice( objects.indexOf( intersect.object ), 1 );
+
+                      }
+
+                      // create cube
+
+                  } else {
+
+                      if ( colorChangeFlag ) {
+                          if ( intersect.object !== plane ) {
+                              objects[ objects.indexOf( intersect.object ) ].material = cubeMaterial[materialIndex];
+                          }
+                      } else {
+                          var voxel = new THREE.Mesh( cubeGeo, cubeMaterial[materialIndex] );
+                          voxel.position.copy( intersect.point ).add( intersect.face.normal );
+                          voxel.position.divideScalar( 50 ).floor().multiplyScalar( 50 ).addScalar( 25 );
+                          scene.add( voxel );
+
+                          objects.push( voxel );
+                          objectsMaterial.push( cubeMaterial[materialIndex] );
+                      }
+
+                  }
+
+                  render();
+
+              }
+          }
+
+      }
+
+      onDocumentKeyDown( event ) {
+
+      switch ( event.keyCode ) {
+
+          case 16: isShiftDown = true; break;
+
+      }
+
+      }
+
+      onDocumentKeyUp( event ) {
+
+      switch ( event.keyCode ) {
+
+          case 16: isShiftDown = false; break;
+
+      }
+
+      }
 
 }
