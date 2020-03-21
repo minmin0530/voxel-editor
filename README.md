@@ -12,3 +12,21 @@ undo/redoの実装
 ## contributors 募集
 一緒に作っていただける方を募集します。  
 使い心地をためしてIssuesに起票していただけるだけでも、ありがたいです。
+
+
+## ビルド
+
+主なnpm run script.
+
+- npm start
+
+  ライブリロードしながら開発できます.
+
+- npm run build|build:stg|build:prd
+
+  各開発環境別にビルドできます
+
+- npm run lint|lint:fix
+
+  lint
+
