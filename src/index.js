@@ -8,7 +8,6 @@ window.main = main;
 window.progressHistory = progressHistory;
 
 window.onload = function() {
-  main.init();
   loop();
 };
 

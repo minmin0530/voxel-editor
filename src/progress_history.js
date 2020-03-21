@@ -24,7 +24,7 @@ class ProgressHistory {
     httpObj.open('GET', url + '?' + (new Date()).getTime(), true);
     // ?以降はキャッシュされたファイルではなく、毎回読み込むためのもの
     httpObj.send(null);
-    httpObj.onreadystatechange = function() {
+    httpObj.onreadystatechange = () => {
       if ((httpObj.readyState == 4) && (httpObj.status == 200)) {
         this.json = JSON.parse(httpObj.responseText);
 
