@@ -1,0 +1,47 @@
+env:
+  es6: true
+  node: true
+  browser: true
+extends:
+  - eslint:recommended
+parserOptions:
+  sourceType: module
+  ecmaVersion: 2017
+rules:
+  indent:
+    - error
+    - 2
+    - SwitchCase: 1
+  linebreak-style:
+    - error
+    - unix
+  quotes:
+    - error
+    - single
+  semi:
+    - error
+    - always
+  no-console:
+    - off
+  no-useless-escape:
+    - off
+  curly:
+    - error
+    - multi-line
+  space-infix-ops:
+    - error
+  space-before-blocks:
+    - error
+  space-in-parens:
+    - error
+    - never
+  arrow-spacing:
+    - error
+  key-spacing:
+    - error
+  comma-spacing:
+    - error
+  comma-dangle:
+    - error
+    - always-multiline
+
