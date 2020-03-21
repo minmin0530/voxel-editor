@@ -7,6 +7,18 @@
     "lib": "lib"
   },
   "scripts": {
+    "start": "webpack-dev-server --mode development",
+    "build": "npm run webpack:dev",
+    "build:stg": "npm run webpack:stg",
+    "build:prd": "npm run webpack:prd",
+    "webpack:dev": "webpack --env.environment development",
+    "webpack:stg": "webpack --env.environment production",
+    "webpack:prd": "webpack --env.environment production",
+    "lint": "eslint ./src/*.js ./gulpfile.babel.js/* ./*.js",
+    "lint:fix": "eslint --fix ./src/*.js ./gulpfile.babel.js/* ./*.js",
+    "clean": "gulp clean",
+    "check-updates": "ncu && npm audit",
+    "clean-install": "rm -rf node_modules/ && rm -rf ~/.npm && npm install",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
