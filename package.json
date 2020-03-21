@@ -1,0 +1,22 @@
+{
+  "name": "voxel-editor",
+  "version": "1.0.0",
+  "description": "![now](./now.png) Web上でVoxelの編集が出来るサービスを作ろうと思っています。   ## 現状 カメラの回転が出来る   色が変更出来る   ファイルの読み書きが出来る ## 次の課題 undo/redoの実装   キューブの透過度を有効にする   他のユーザの作品を共有する   ## contributors 募集 一緒に作っていただける方を募集します。   使い心地をためしてIssuesに起票していただけるだけでも、ありがたいです。",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/minmin0530/voxel-editor.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/minmin0530/voxel-editor/issues"
+  },
+  "homepage": "https://github.com/minmin0530/voxel-editor#readme"
+}
