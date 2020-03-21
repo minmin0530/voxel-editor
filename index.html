@@ -1,31 +1,6 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <script src="lib/three.min.js"></script>
-    <script src="lib/OrbitControls.js"></script>
-    <script src="src/progress_history.js"></script>
-    <script src="src/global.js"></script>
-    <script src="src/main.js"></script>
-    <script>
-      const progressHistory = new ProgressHistory();
-      const main = new Main();
-      var controls;
-      var loadFlag = false;
-
-      window.onload = function() {
-          main.init();
-          loop();
-      };
-
-      function loop() {
-          if (loadFlag) {
-              progressHistory.timeLine();
-          }
-          controls.update();
-          render();
-          requestAnimationFrame(loop);
-      }
-    </script>
   </head>
   <body>
     <div style="color: red; font-size: 48px; position: absolute; left:300px;">
@@ -37,16 +12,16 @@
       <button type="button" onclick="progressHistory.loadFile('https://ai5.jp/voxel-editor/assets/voxel_model004.txt');">example1</button><br>
       <button type="button" onclick="progressHistory.loadFile('https://ai5.jp/voxel-editor/assets/MageMin.txt');">example2</button><br>
       <br>
-      <button type="button" onclick="downLoadJson();">ダウンロード</button><br>
+      <button type="button" onclick="main.downLoadJson();">ダウンロード</button><br>
       <form name="myform">
         <input name="myfile" type="file" />
       </form>
-      <button onclick="colorChange();" id="colorChange">色入替</button><br>      
-      <button onclick="anglePut();" id="anglePut">削除</button><br>
-      <button onclick="allClear();">AllClear</button><br>
-      <button onclick="boxAll(4);">4×4×4</button><br>
-      <button onclick="boxAll(8);">8×8×8</button><br>
-      <button onclick="boxAll(16);">16×16×16</button><br>
+      <button onclick="main.colorChange();" id="colorChange">色入替</button><br>      
+      <button onclick="main.anglePut();" id="anglePut">削除</button><br>
+      <button onclick="main.allClear();">AllClear</button><br>
+      <button onclick="main.boxAll(4);">4×4×4</button><br>
+      <button onclick="main.boxAll(8);">8×8×8</button><br>
+      <button onclick="main.boxAll(16);">16×16×16</button><br>
       <input type="color" id="background" value="#dddddd">Background<br>
       <input type="color" id="color1" value="#ff0000"><br>
       <input type="color" id="color2" value="#00ff00"><br>

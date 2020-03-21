@@ -1,0 +1,55 @@
+{
+  "name": "voxel-editor",
+  "version": "1.0.0",
+  "description": "![now](./now.png) Web上でVoxelの編集が出来るサービスを作ろうと思っています。   ## 現状 カメラの回転が出来る   色が変更出来る   ファイルの読み書きが出来る ## 次の課題 undo/redoの実装   キューブの透過度を有効にする   他のユーザの作品を共有する   ## contributors 募集 一緒に作っていただける方を募集します。   使い心地をためしてIssuesに起票していただけるだけでも、ありがたいです。",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "start": "webpack-dev-server --mode development",
+    "build": "npm run webpack:dev",
+    "build:stg": "npm run webpack:stg",
+    "build:prd": "npm run webpack:prd",
+    "webpack:dev": "webpack --env.environment development",
+    "webpack:stg": "webpack --env.environment production",
+    "webpack:prd": "webpack --env.environment production",
+    "lint": "eslint ./src/*.js ./gulpfile.babel.js/* ./*.js",
+    "lint:fix": "eslint --fix ./src/*.js ./gulpfile.babel.js/* ./*.js",
+    "clean": "gulp clean",
+    "check-updates": "ncu && npm audit",
+    "clean-install": "rm -rf node_modules/ && rm -rf ~/.npm && npm install",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/minmin0530/voxel-editor.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/minmin0530/voxel-editor/issues"
+  },
+  "homepage": "https://github.com/minmin0530/voxel-editor#readme",
+  "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@babel/preset-env": "^7.9.0",
+    "@babel/register": "^7.9.0",
+    "babel-loader": "^8.1.0",
+    "eslint": "^6.8.0",
+    "eslint-loader": "^3.0.3",
+    "file-loader": "^6.0.0",
+    "gulp": "^4.0.2",
+    "html-loader": "^1.0.0",
+    "html-webpack-plugin": "^3.2.0",
+    "html-webpack-plugins": "^3.0.0",
+    "webpack": "^4.42.0",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.10.3"
+  },
+  "dependencies": {
+    "core-js": "^3.6.4",
+    "npm-check-updates": "^4.0.4",
+    "three": "^0.114.0"
+  }
+}
