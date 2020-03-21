@@ -2,12 +2,11 @@ import webpack from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 
 const webpackConfig = (env) => {
-  const mode = env.environment || 'development';
+  console.log(env);
   const config = {
     entry: {
       index: './src/index.js',
     },
-    mode,
     output: {
       path: `${__dirname}/dist/`,
       filename: '[name].js',

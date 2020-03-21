@@ -33,7 +33,7 @@ class ProgressHistory {
     };
   }
   timeLine() {
-    if (!this.loadFile) return;
+    if (!this.loadFlag) return;
 
     const mm = this.json.material;
 

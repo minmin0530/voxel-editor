@@ -43,19 +43,19 @@ class Main {
   init() {
 
     for (let l = 0; l < 16; ++l) {
-      document.getElementById(colorNumTextArray[l]).addEventListener('click', function() {
+      document.getElementById(colorNumTextArray[l]).addEventListener('click', () => {
         this.materialIndex = l;
         this.cubeMaterial[l].color.set(document.getElementById(colorNumTextArray[l]).value);
       }, false);
-      document.getElementById(colorNumTextArray[l]).addEventListener('change', function() {
+      document.getElementById(colorNumTextArray[l]).addEventListener('change', () => {
         this.materialIndex = l;
         this.cubeMaterial[l].color.set(document.getElementById(colorNumTextArray[l]).value);
       }, false);
     }
-    document.getElementById('background').addEventListener('click', function() {
+    document.getElementById('background').addEventListener('click', () => {
       this.renderer.setClearColor(document.getElementById('background').value, 1.0);          
     });
-    document.getElementById('background').addEventListener('change', function() {
+    document.getElementById('background').addEventListener('change', () => {
       this.renderer.setClearColor(document.getElementById('background').value, 1.0);
     });
 
@@ -117,11 +117,11 @@ class Main {
 
     window.addEventListener('resize', event => this.onWindowResize(event), false);
     this.form = document.forms.myform;
-    this.form.myfile.addEventListener('change', function(e) {
+    this.form.myfile.addEventListener('change', (e) => {
       var result = e.target.files[0];
       var reader = new FileReader();
       reader.readAsText(result);
-      reader.addEventListener('load', function() {
+      reader.addEventListener('load', () => {
         // loadFlag = true;
         const mm = JSON.parse(reader.result).material;
 
