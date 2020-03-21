@@ -7,13 +7,13 @@
     "lib": "lib"
   },
   "scripts": {
-    "start": "webpack-dev-server --mode development",
+    "start": "webpack-dev-server --mode development --env.environment development",
     "build": "npm run webpack:dev",
     "build:stg": "npm run webpack:stg",
     "build:prd": "npm run webpack:prd",
-    "webpack:dev": "webpack --env.environment development",
-    "webpack:stg": "webpack --env.environment production",
-    "webpack:prd": "webpack --env.environment production",
+    "webpack:dev": "webpack --mode development --env.environment development",
+    "webpack:stg": "webpack --mode development --env.environment staging",
+    "webpack:prd": "webpack --mode production --env.environment production",
     "lint": "eslint ./src/*.js ./gulpfile.babel.js/* ./*.js",
     "lint:fix": "eslint --fix ./src/*.js ./gulpfile.babel.js/* ./*.js",
     "clean": "gulp clean",
