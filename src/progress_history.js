@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import userEnv from 'userEnv';
 import { colorNumTextArray, colorToText } from './global';
 
 class ProgressHistory {
@@ -14,7 +15,8 @@ class ProgressHistory {
 
   }
 
-  loadFile(url) {
+  loadFile(path) {
+    const url = `${userEnv.BASE_URL}/${path}`;
     this.vvv = 0;
     this.timeCount = 0;
     this.main.allClear();
@@ -22,7 +24,7 @@ class ProgressHistory {
     httpObj.open('GET', url + '?' + (new Date()).getTime(), true);
     // ?以降はキャッシュされたファイルではなく、毎回読み込むためのもの
     httpObj.send(null);
-    httpObj.onreadystatechange = function() {
+    httpObj.onreadystatechange = () => {
       if ((httpObj.readyState == 4) && (httpObj.status == 200)) {
         this.json = JSON.parse(httpObj.responseText);
 

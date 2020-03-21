@@ -28,6 +28,8 @@ class Main {
     this.colorChangeFlag = false;
     this.cameraAngle = 0.0;
     this.cameraZoom = 700.0;
+
+    this.init();
   }
 
   getThreeObject() {

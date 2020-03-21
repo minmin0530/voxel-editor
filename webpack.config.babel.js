@@ -1,5 +1,7 @@
+import path from 'path';
 import webpack from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
+import CopyWebpackPlugin from 'copy-webpack-plugin';
 
 const webpackConfig = (env) => {
   console.log(env);
@@ -17,8 +19,13 @@ const webpackConfig = (env) => {
       open: true,
       openPage: 'index.html',
       host: 'localhost',
-      https: false,
+      https: true,
       port: 9000,
+    },
+    resolve: {
+      alias: {
+        userEnv$: path.resolve(__dirname, `.env/${env.environment}.js`),
+      },
     },
     module: {
       rules: [
@@ -50,6 +57,12 @@ const webpackConfig = (env) => {
         template: './index.html',
         chunks: ['index'],
       }),
+      new CopyWebpackPlugin([
+        {
+          from: 'assets',
+          to: 'assets',
+        },
+      ]),
     ],
   };
   return config;
