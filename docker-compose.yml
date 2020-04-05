@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  httpd:
+    build:
+      context: ./infra
+      dockerfile: ./dockerfile/ubuntu_nginx_Dockerfile
+    ports:
+      - 10443:443
+      - 10080:80
+    volumes:
+      - ./dist:/data
+      - ./dist/logs:/data/logs
+      - ./infra/scripts:/home/workspace/scripts
+      - ./infra/nginx:/etc/nginx
+      - ./infra/certs:/home/workspace/certs
+    restart: always
+

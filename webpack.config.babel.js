@@ -2,6 +2,7 @@ import path from 'path';
 import webpack from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import CopyWebpackPlugin from 'copy-webpack-plugin';
+import MakeDirWebpackPlugin from 'make-dir-webpack-plugin';
 
 const webpackConfig = (env) => {
   console.log(env);
@@ -54,7 +55,7 @@ const webpackConfig = (env) => {
       }),
       new HtmlWebpackPlugin({
         filename: 'index.html',
-        template: './index.html',
+        template: './src/templates/index.html',
         chunks: ['index'],
       }),
       new CopyWebpackPlugin([
@@ -62,7 +63,16 @@ const webpackConfig = (env) => {
           from: 'assets',
           to: 'assets',
         },
+        {
+          from: 'src/php',
+          to: '',
+        },
       ]),
+      new MakeDirWebpackPlugin({
+        dirs: [
+          { path: './dist/data' },
+        ],
+      }),
     ],
   };
   return config;
