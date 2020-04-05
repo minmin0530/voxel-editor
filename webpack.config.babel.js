@@ -54,13 +54,17 @@ const webpackConfig = (env) => {
       }),
       new HtmlWebpackPlugin({
         filename: 'index.html',
-        template: './index.html',
+        template: './src/templates/index.html',
         chunks: ['index'],
       }),
       new CopyWebpackPlugin([
         {
           from: 'assets',
           to: 'assets',
+        },
+        {
+          from: 'src/php',
+          to: '',
         },
       ]),
     ],

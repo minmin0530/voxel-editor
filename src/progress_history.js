@@ -63,7 +63,56 @@ class ProgressHistory {
       ++this.vvv;
 
     }
+  }
+  displayContent() {
+    this.main.allClear();
+    const selectNum = document.getElementById('selectBoxName').value;
+    this.loadFile(selectNum);
+  }
+  postSend() {
+    let contents = '';
+    for (const voxel of this.main.objects) {
+      let i = 0;
+      for (const cm of this.main.cubeMaterial) {
+        if (voxel.material == cm) {
+          break;
+        }
+        ++i;
+      }
+      if (i < 16) {
+        const str = '{'
+                + '"x":' + ((voxel.position.x + 25) / 50) + ','
+                + '"y":' + ((voxel.position.y - 25) / 50) + ','
+                + '"z":' + ((voxel.position.z + 25) / 50) + ','
+                + '"m":' + i + '},';
+        console.log(str);
+        contents += str;
+      }
+    }
 
+    let material = '"material":[';
+    for (let l = 0; l < 16; ++l) {
+      this.main.cubeMaterial[l].color.set(document.getElementById(colorNumTextArray[l]).value);
+      const str = '{'
+                + '"r":' + this.main.cubeMaterial[l].color.r + ','
+                + '"g":' + this.main.cubeMaterial[l].color.g + ','
+                + '"b":' + this.main.cubeMaterial[l].color.b + ','
+                + '"a":' + this.main.cubeMaterial[l].opacity + '},';
+      console.log(str);
+      material += str;
+    }
+    const mat = material.substr(0, material.length - 1) + ']}';
+
+    const fd = new FormData();
+    fd.append('data', '{"voxel":[' + contents.substr(0, contents.length - 1) + '],' + mat);
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', './writefile.php');
+    xhr.send(fd);
+    xhr.onreadystatechange = () => {
+      if ((xhr.readyState == 4) && (xhr.status == 200)) {
+        alert('保存名:' + xhr.responseText);
+      }
+    };
   }
 }
 
