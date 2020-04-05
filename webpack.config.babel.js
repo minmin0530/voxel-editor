@@ -2,6 +2,7 @@ import path from 'path';
 import webpack from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import CopyWebpackPlugin from 'copy-webpack-plugin';
+import MakeDirWebpackPlugin from 'make-dir-webpack-plugin';
 
 const webpackConfig = (env) => {
   console.log(env);
@@ -67,6 +68,11 @@ const webpackConfig = (env) => {
           to: '',
         },
       ]),
+      new MakeDirWebpackPlugin({
+        dirs: [
+          { path: './dist/data' },
+        ],
+      }),
     ],
   };
   return config;
