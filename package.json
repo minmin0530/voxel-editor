@@ -50,6 +50,6 @@
   "dependencies": {
     "core-js": "^3.6.4",
     "npm-check-updates": "^4.0.4",
-    "three": "^0.114.0"
+    "three": "^0.125.0"
   }
 }
